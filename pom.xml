@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <start-class>de.codecentric.workshop.spring5.WebApp</start-class>
+        <start-class>de.codecentric.workshop.spring5.WebAppKt</start-class>
         <kotlin.version>1.3.11</kotlin.version>
     </properties>
 
