@@ -1,0 +1,17 @@
+logging:
+  level:
+    org.springframework.cloud: INFO
+
+spring:
+  cloud:
+    stream:
+      bindings:
+        myInput:
+          destination: amq.topic
+        myOutput:
+          destination: amq.topic
+      rabbit:
+        bindings:
+          myInput:
+            consumer:
+              bindingRoutingKey: event.ereignis
