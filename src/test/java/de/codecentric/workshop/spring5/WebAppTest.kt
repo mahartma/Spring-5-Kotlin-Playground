@@ -43,20 +43,20 @@ class WebAppTest {
 
     @Test
     fun `sollte Event per Websocket empfangen`() {
-        val output : MonoProcessor<String> = MonoProcessor.create()
+        val output: MonoProcessor<String> = MonoProcessor.create()
 
         client.execute(URI.create("ws://localhost:$port/event-emitter"))
-            { session: WebSocketSession ->
+        { session: WebSocketSession ->
 
-                rabbbitTemplate.convertAndSend("amq.topic", "test.queue",
-                        mapper.writeValueAsBytes(Event("max")))
+            rabbbitTemplate.convertAndSend("amq.topic", "test.queue",
+                    mapper.writeValueAsBytes(Event("max")))
 
-                session.send(Flux.empty())
-                        .and(session.receive()
-                                .map { it.payloadAsText }
-                                .subscribeWith(output)
-                                .then())
-            }.block(TIMEOUT)
+            session.send(Flux.empty())
+                    .and(session.receive()
+                            .map { it.payloadAsText }
+                            .subscribeWith(output)
+                            .then())
+        }.block(TIMEOUT)
 
         assertThat(mapper.readValue(output.block(TIMEOUT), Event::class.java), `is`(Event("max")))
     }
@@ -71,4 +71,4 @@ class TestConfig {
     }
 }
 
-private val TIMEOUT= Duration.ofMillis(5000)
+private val TIMEOUT = Duration.ofMillis(5000)

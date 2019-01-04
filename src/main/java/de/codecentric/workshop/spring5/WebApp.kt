@@ -33,9 +33,9 @@ class WebApp {
     @Bean
     fun rabbitFlow(connectionFactory: ConnectionFactory, inboundChannel: SubscribableChannel): IntegrationFlow =
             IntegrationFlows
-            .from(Amqp.inboundAdapter(connectionFactory, Queue("test_queue")))
-            .channel(inboundChannel)
-            .get()
+                    .from(Amqp.inboundAdapter(connectionFactory, Queue("test_queue")))
+                    .channel(inboundChannel)
+                    .get()
 
     @Bean
     fun webSocketHandlerMapping(): HandlerMapping {
@@ -46,11 +46,11 @@ class WebApp {
         return handlerMapping
     }
 
-    fun webSocketHandler() : WebSocketHandler {
+    fun webSocketHandler(): WebSocketHandler {
         val connections = HashMap<String, MessageHandler>()
 
         return WebSocketHandler { session: WebSocketSession ->
-            val rabbit2webSocketFlux = Flux.create ( Consumer<FluxSink<WebSocketMessage>> {
+            val rabbit2webSocketFlux = Flux.create(Consumer<FluxSink<WebSocketMessage>> {
                 val messageHandler = WebsocketMessageHandler(session, it)
                 connections[session.id] = messageHandler
                 inboundChannel().subscribe(messageHandler)
