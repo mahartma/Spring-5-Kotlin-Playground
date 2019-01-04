@@ -15,6 +15,9 @@ import org.springframework.messaging.Message
 import org.springframework.messaging.MessageHandler
 import org.springframework.messaging.SubscribableChannel
 import org.springframework.web.reactive.HandlerMapping
+import org.springframework.web.reactive.function.server.RouterFunction
+import org.springframework.web.reactive.function.server.RouterFunctions.route
+import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping
 import org.springframework.web.reactive.socket.WebSocketHandler
 import org.springframework.web.reactive.socket.WebSocketMessage
@@ -22,6 +25,7 @@ import org.springframework.web.reactive.socket.WebSocketSession
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter
 import reactor.core.publisher.Flux
 import reactor.core.publisher.FluxSink
+import reactor.core.publisher.Mono
 import java.util.function.Consumer
 
 @SpringBootApplication
@@ -36,6 +40,18 @@ class WebApp {
                     .from(Amqp.inboundAdapter(connectionFactory, Queue("test_queue")))
                     .channel(inboundChannel)
                     .get()
+
+    @Bean
+    fun router() : RouterFunction<ServerResponse> = route()
+            .GET("/rest/event") {
+                ServerResponse.ok()
+                        .body(Mono.just(Event("max")), Event::class.java)
+            }
+            .POST("/rest/event") {
+                ServerResponse.ok()
+                        .body(Mono.just("ok"), String::class.java)
+            }
+            .build()
 
     @Bean
     fun webSocketHandlerMapping(): HandlerMapping {
