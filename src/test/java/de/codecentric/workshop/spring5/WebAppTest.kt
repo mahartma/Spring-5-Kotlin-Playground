@@ -66,9 +66,7 @@ class WebAppTest {
 @Configuration
 class TestConfig {
     @Bean
-    fun client(): ReactorNettyWebSocketClient {
-        return ReactorNettyWebSocketClient()
-    }
+    fun client() = ReactorNettyWebSocketClient()
 }
 
 private val TIMEOUT = Duration.ofMillis(5000)
